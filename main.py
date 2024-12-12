@@ -1,77 +1,77 @@
 import trimesh
 import logging
 import miney
+import numpy as np
 
-print("📃 Read STL file.")
+logging.basicConfig(level="INFO")
+
+logging.info("📃 Read STL file.")
 stl_mesh = trimesh.load_mesh("3DBenchy.stl")
 
-print("🎲 Create a matrix from the STL file.")
-voxel_size = 0.3
+logging.info("🎲 Create a matrix from the STL file.")
+voxel_size = 0.7
 voxelized = stl_mesh.voxelized(voxel_size)
 voxel_matrix = voxelized.matrix
 
-print("🌍️ World shape: %s, %s, %s (x, y, z)." % (voxel_matrix.shape))
-pixels = voxel_matrix.shape[0] * voxel_matrix.shape[1] * voxel_matrix.shape[2]
-print("🧪 We have to check %s pixels." % pixels)
+logging.info("🌍️ Object shape: %s, %s, %s (x, y, z)." % (voxel_matrix.shape))
+x_dim = voxel_matrix.shape[0]
+y_dim = voxel_matrix.shape[1]
+z_dim = voxel_matrix.shape[2]
+pixels = x_dim * y_dim * z_dim
+logging.info("🧪 We have to check %s pixels." % pixels)
 
-batch_size = 32000
-print("🔪 We creating batches of %s pixels." % batch_size)
+# create a 4xN matrix
+x_coords, y_coords, z_coords = np.indices((x_dim, y_dim, z_dim))
+x_flat = x_coords.flatten()
+y_flat = y_coords.flatten()
+z_flat = z_coords.flatten()
+values_flat = voxel_matrix.flatten()
+four_x_n_marix = np.vstack((x_flat, y_flat, z_flat, values_flat))
 
-print("🏃 Iterate over matrix.")
-batches = list()
-air_batches = list()
-batch = list()
-air_batch = list()
-start_position = {'z': 0, 'x': -256, 'y': 9}
+# create rotation matrix
+rotation_matrix = np.matrix([
+    [1, 0, 0],
+    [0, 0, -1],
+    [0, 1, 0]
+])
 
-print("🚜 Calculate base plate.")
-for x_offset in range(voxel_matrix.shape[0]):
-    logging.debug("Edit x: %s/%s" % (x_offset, voxel_matrix.shape[0]))
-    for z_offset in range(voxel_matrix.shape[2]):
-        logging.debug("Edit z: %s/%s" % (z_offset, voxel_matrix.shape[2]))
-        voxel = {
-            "x": start_position["x"] + x_offset,
-            "y": start_position["y"] + -1,
-            "z": start_position["z"] + z_offset
-        }
-        if len(batch) >= batch_size:
-            batches.append(batch)
-            batch = list()
-        batch.append(voxel)
-batches.append(batch)
+# multiply with rotation matrix
+rotated_three_x_n_matrix = np.dot(four_x_n_marix[:3].T, rotation_matrix).T
 
-for y_offset in range(voxel_matrix.shape[1]):
-    logging.debug("Edit y: %s/%s" % (y_offset, voxel_matrix.shape[1]))
-    for x_offset in range(voxel_matrix.shape[0]):
-        logging.debug("Edit x: %s/%s" % (x_offset, voxel_matrix.shape[0]))
-        for z_offset in range(voxel_matrix.shape[2]):
-            logging.debug("Edit z: %s/%s" % (z_offset, voxel_matrix.shape[2]))
-            voxel = {
-                "x": start_position["x"] + x_offset,
-                "y": start_position["y"] + y_offset,
-                "z": start_position["z"] + z_offset
+# print in luanti
+# separate air and object
+object_values = four_x_n_marix[3, :]
+# Find indices where the value is 1
+object_indices = np.where(object_values == 1)[0]
+air_indices = np.where(object_values == 0)[0]
+
+object_matrix = rotated_three_x_n_matrix[:3, object_indices]
+air_matrix = rotated_three_x_n_matrix[:3, air_indices]
+logging.info("[ %s ] object pixels.", len(object_indices))
+logging.info("[ %s ] air pixels.", len(air_indices))
+
+def print_voxels(mt, matrix, type):
+    batch_size = 32000
+    batches = list()
+    batch_index = 0
+    for object_pixel in matrix.T:
+        if len(batches) > batch_size:
+            batch_index += 1
+            logging.info("[ %s ] batch index.", batch_index)
+            mt.node.set(batches, name=type)
+            batches = list()
+        batches.append(
+            {
+                "x": int(object_pixel[0, 0]),
+                "y": int(object_pixel[0, 1]),
+                "z": int(object_pixel[0, 2])
             }
-            if len(air_batch) >= batch_size:
-                air_batches.append(air_batch)
-                air_batch = list()
-            air_batch.append(voxel)
-            if voxel_matrix[x_offset][y_offset][z_offset]:
-                if len(batch) >= batch_size:
-                    batches.append(batch)
-                    batch = list()
-                batch.append(voxel)
-air_batches.append(air_batch)
-batches.append(batch)
+        )
+    mt.node.set(batches, name=type)
 
-print("💨 We have to clear the air in %s batches." % len(air_batches))
-print("📦️ We have to print %s batches." % len(batches))
 mt = miney.Minetest()
 mt.time_of_day = 0.3
 mt.player["singleplayer"].fly = True
-for increment in range(len(air_batches)):
-    print("☁️ Place air: %s/%s" % (increment + 1, len(air_batches)))
-    mt.node.set(air_batches[increment], name="air")
-for increment in range(len(batches)):
-    print("📦️ Print batch: %s/%s" % (increment + 1, len(batches)))
-    mt.node.set(batches[increment], name="default:dirt")
-mt.player["singleplayer"].position = {'z': 0 + voxel_matrix.shape[2], 'x': -256 + voxel_matrix.shape[0], 'y': 9.5 + voxel_matrix.shape[1]}
+
+print_voxels(mt, object_matrix, "default:dirt")
+print_voxels(mt, air_matrix, "air")
