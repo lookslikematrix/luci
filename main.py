@@ -3,13 +3,16 @@ import logging
 import miney
 import numpy as np
 
+from pathlib import Path
+
 logging.basicConfig(level="INFO")
 
-logging.info("📃 Read STL file.")
-stl_mesh = trimesh.load_mesh("3DBenchy.stl")
+stl_file = Path("data").joinpath("scaleable_base_door_and_roofv2_merged.stl")
+logging.info("[%s] 📃 Read STL file.", stl_file.absolute())
+stl_mesh = trimesh.load_mesh(stl_file)
 
 logging.info("🎲 Create a matrix from the STL file.")
-voxel_size = 0.7
+voxel_size = 1
 voxelized = stl_mesh.voxelized(voxel_size)
 voxel_matrix = voxelized.matrix
 
@@ -54,10 +57,11 @@ def print_voxels(mt, matrix, type):
     batch_size = 32000
     batches = list()
     batch_index = 0
+    max_batches = matrix.T.shape[0] // batch_size
     for object_pixel in matrix.T:
         if len(batches) > batch_size:
             batch_index += 1
-            logging.info("[ %s ] batch index.", batch_index)
+            logging.info("[ %s/%s ] batch index.", batch_index, max_batches)
             mt.node.set(batches, name=type)
             batches = list()
         batches.append(
@@ -71,7 +75,13 @@ def print_voxels(mt, matrix, type):
 
 mt = miney.Minetest()
 mt.time_of_day = 0.3
+mt.player["singleplayer"].speed = 50
 mt.player["singleplayer"].fly = True
+mt.player["singleplayer"].position = {
+    "x": 0,
+    "y": 0,
+    "z": 0
+}
 
 print_voxels(mt, object_matrix, "default:dirt")
 print_voxels(mt, air_matrix, "air")
