@@ -1,4 +1,0 @@
-matplotlib
-miney
-numpy
-trimesh[easy]

@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "luci"
+version = "1.0.0"
+description = "📦️ LuCI - Luanti Commandline Interface"
+authors = ["Christian Decker <christian.decker@lookslikematrix.de>"]
+license = "LGPL"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+miney = "^0.2.2"
+numpy = "^2.2.0"
+trimesh = {extras = ["easy"], version = "^4.5.3"}
+click = "^8.1.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

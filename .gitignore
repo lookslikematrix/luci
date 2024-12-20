@@ -1,4 +1,6 @@
 # directories
 data
-.venv
 __pycache__
+
+# files
+TODO.md
