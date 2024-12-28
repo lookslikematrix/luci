@@ -6,13 +6,15 @@ authors = ["Christian Decker <christian.decker@lookslikematrix.de>"]
 license = "LGPL"
 readme = "README.md"
 
+[project.scripts]
+luci = "luci.__main__:cli"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 miney = "^0.2.2"
 numpy = "^2.2.0"
 trimesh = {extras = ["easy"], version = "^4.5.3"}
 click = "^8.1.7"
-
 
 [build-system]
 requires = ["poetry-core"]
