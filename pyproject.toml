@@ -6,7 +6,7 @@ authors = ["Christian Decker <christian.decker@lookslikematrix.de>"]
 license = "LGPL"
 readme = "README.md"
 
-[project.scripts]
+[tool.poetry.scripts]
 luci = "luci.__main__:cli"
 
 [tool.poetry.dependencies]
