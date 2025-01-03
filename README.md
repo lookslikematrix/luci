@@ -19,6 +19,12 @@ Build a CAD-Object in the STL format with `luci`.
 ```bash
 luci build --help
 luci build data/some_stl_file.stl
+# get all wool blocks
+luci blocks --filter wool
+# build object with green wool
+luci build data/some_stl_file.stl --block-type wool:green
+# scale by factor 2
+luci build data/some_stl_file.stl --scale 2
 ```
 
 Erase this CAD-Object.
@@ -26,6 +32,8 @@ Erase this CAD-Object.
 ```bash
 luci erase --help
 luci erase data/some_stl_file.stl
+# erase scale by factor 2
+luci erase data/some_stl_file.stl --scale 2
 ```
 
 

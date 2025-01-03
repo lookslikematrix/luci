@@ -64,16 +64,17 @@ def init_luanti_player(mt):
         "z": 0
     }
 
-def build_voxels(mt, matrix, type):
+def build_voxels(mt, matrix, block_type):
     batch_size = 32000
     batches = list()
     batch_index = 0
     max_batches = matrix.T.shape[0] // batch_size
+    click.echo("[ %s ] block type." % block_type )
     for object_pixel in matrix.T:
         if len(batches) > batch_size:
             batch_index += 1
             click.echo("[ %s/%s ] batch index." % (batch_index, max_batches))
-            mt.node.set(batches, name=type)
+            mt.node.set(batches, name=block_type)
             batches = list()
         batches.append(
             {
@@ -82,7 +83,7 @@ def build_voxels(mt, matrix, type):
                 "z": int(object_pixel[0, 2])
             }
         )
-    mt.node.set(batches, name=type)
+    mt.node.set(batches, name=block_type)
 
 @click.group()
 @click.option(
@@ -111,7 +112,13 @@ def cli(loglevel):
     default=1,
     show_default=True
 )
-def build(filename: str, scale: float):
+@click.option(
+    "-b", "--block-type",
+    help="Specifies which block-type should be used for building.",
+    default="default:goldblock",
+    show_default=True
+)
+def build(filename: str, scale: float, block_type: str):
     """Build a STL file into Luanti.
 
 Example:
@@ -122,7 +129,7 @@ Example:
     object_matrix = get_object_matrix(filename, scale)
     mt = miney.Minetest()
     init_luanti_player(mt)
-    build_voxels(mt, object_matrix, "default:goldblock")
+    build_voxels(mt, object_matrix, block_type)
 
 
 @cli.command()
@@ -146,6 +153,32 @@ Example:
     init_luanti_player(mt)
     build_voxels(mt, object_matrix, "air")
 
+
+@cli.command()
+@click.option(
+    "-f", "--filter",
+    help="Defines a filter to reduce the output.",
+    default="default",
+    show_default=True
+)
+def blocks(filter):
+    """Get all block types from current Luanti game.
+
+Example:
+
+    Get all default blocks.
+        luci blocks
+
+    Get all blocks.
+        luci blocks --filter ""
+
+    Get all wools.
+        luci blocks --filter "wool"
+    """
+    mt = miney.Minetest()
+    for node_type in mt.node.type:
+        if filter in node_type:
+            click.echo("[ %s ] node type." % node_type)
 
 if __name__ == '__main__':
     cli()
