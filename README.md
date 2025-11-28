@@ -79,6 +79,7 @@ If you like to use `luci` you have to follow this steps.
     sudo apt install pipx -y
     pipx ensurepath
     pipx install git+https://github.com/lookslikematrix/luci.git
+    pipx upgrade luci
     ```
 
 5. Create game, enable `mineysocket` mod and start game.

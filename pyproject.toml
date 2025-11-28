@@ -10,11 +10,11 @@ readme = "README.md"
 luci = "luci.__main__:cli"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.13"
 miney = "^0.2.2"
 numpy = "^2.2.0"
-trimesh = {extras = ["easy"], version = "^4.5.3"}
-click = "^8.1.7"
+trimesh = {extras = ["easy"], version = "^4.10.0"}
+click = "^8.3.1"
 
 [build-system]
 requires = ["poetry-core"]
