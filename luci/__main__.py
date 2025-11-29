@@ -58,13 +58,11 @@ def init_luanti_player(mt):
     mt.time_of_day = 0.3
     mt.player["singleplayer"].speed = 50
     mt.player["singleplayer"].fly = True
-    mt.player["singleplayer"].position = {
-        "x": 0,
-        "y": 0,
-        "z": 0
-    }
 
-def build_voxels(mt, matrix, block_type):
+def build_voxels(mt, position, matrix, block_type):
+    x = round(position["x"])
+    y = round(position["y"])
+    z = round (position["z"])
     batch_size = 32000
     batches = list()
     batch_index = 0
@@ -78,9 +76,9 @@ def build_voxels(mt, matrix, block_type):
             batches = list()
         batches.append(
             {
-                "x": int(object_pixel[0, 0]),
-                "y": int(object_pixel[0, 1]),
-                "z": int(object_pixel[0, 2])
+                "x": int(object_pixel[0, 0] + x),
+                "y": int(object_pixel[0, 1] + y),
+                "z": int(object_pixel[0, 2] + z)
             }
         )
     mt.node.set(batches, name=block_type)
@@ -118,7 +116,22 @@ def cli(loglevel):
     default="default:goldblock",
     show_default=True
 )
-def build(filename: str, scale: float, block_type: str):
+@click.option(
+    "-x",
+    type=int,
+    help="Specifies x-axes to start building."
+)
+@click.option(
+    "-y",
+    type=int,
+    help="Specifies y-axes to start building."
+)
+@click.option(
+    "-z",
+    type=int,
+    help="Specifies z-axes to start building."
+)
+def build(filename: str, scale: float, block_type: str, x: int, y:int, z: int):
     """Build a STL file into Luanti.
 
 Example:
@@ -128,8 +141,15 @@ Example:
     """
     object_matrix = get_object_matrix(filename, scale)
     mt = miney.Minetest()
+    position = mt.player["singleplayer"].position
+    if x is not None:
+        position["x"] = x
+    if y is not None:
+        position["y"] = y
+    if z is not None:
+        position["z"] = z
     init_luanti_player(mt)
-    build_voxels(mt, object_matrix, block_type)
+    build_voxels(mt, position, object_matrix, block_type)
 
 
 @cli.command()
@@ -140,7 +160,22 @@ Example:
     default=1,
     show_default=True
 )
-def erase(filename: str, scale: float):
+@click.option(
+    "-x",
+    type=int,
+    help="Specifies x-axes to start building."
+)
+@click.option(
+    "-y",
+    type=int,
+    help="Specifies y-axes to start building."
+)
+@click.option(
+    "-z",
+    type=int,
+    help="Specifies z-axes to start building."
+)
+def erase(filename: str, scale: float, x: int, y:int, z: int):
     """Erase a STL file from Luanti.
 
 Example:
@@ -151,7 +186,15 @@ Example:
     object_matrix = get_object_matrix(filename, scale)
     mt = miney.Minetest()
     init_luanti_player(mt)
-    build_voxels(mt, object_matrix, "air")
+    position = mt.player["singleplayer"].position
+    if x is not None:
+        position["x"] = x
+    if y is not None:
+        position["y"] = y
+    if z is not None:
+        position["z"] = z
+    init_luanti_player(mt)
+    build_voxels(mt, position, object_matrix, "air")
 
 
 @cli.command()

@@ -1,3 +1,11 @@
+# 1.2
+
+* Add `-x`, `-y` and `-z` to `build`.
+
+    This gives you the freedom to build wherever you want.
+
+* Default of model building is not (0, 0, 0) anymore. It builds now at the players position.
+
 # 1.1
 
 * Add `blocks` command to get possible block types.

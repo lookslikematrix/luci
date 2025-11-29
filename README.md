@@ -25,6 +25,8 @@ luci blocks --filter wool
 luci build data/some_stl_file.stl --block-type wool:green
 # scale by factor 2
 luci build data/some_stl_file.stl --scale 2
+# build object at exact position. Default is at the players position.
+luci build data/some_stl_file.stl -x 100 -y 150 -z 50
 ```
 
 Erase this CAD-Object.
@@ -85,8 +87,6 @@ If you like to use `luci` you have to follow this steps.
 5. Create game, enable `mineysocket` mod and start game.
 
     ![New game](assets/new_game.png)
-
-    ![Singlenode game](assets/singlenode_game.png)
 
     ![Select mods](assets/select_mods.png)
 
