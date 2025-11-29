@@ -223,5 +223,21 @@ Example:
         if filter in node_type:
             click.echo("[ %s ] node type." % node_type)
 
+
+@cli.command()
+def info():
+    """Get info.
+
+Example:
+
+    Get infos.
+        luci info
+    """
+    mt = miney.Minetest()
+    position = mt.player["singleplayer"].position
+    click.echo(f"x | {position["x"]}")
+    click.echo(f"y | {position["y"]}")
+    click.echo(f"z | {position["z"]}")
+
 if __name__ == '__main__':
     cli()

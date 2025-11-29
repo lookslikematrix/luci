@@ -1,3 +1,7 @@
+# 1.3
+
+* Add `info` to get players location.
+
 # 1.2
 
 * Add `-x`, `-y` and `-z` to `build`.
