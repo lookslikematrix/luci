@@ -647,13 +647,14 @@ dev = ["mypy", "pytest (>=8.0)"]
 
 [[package]]
 name = "miney"
-version = "0.2.2"
-description = "The python interface to minetest"
+version = "0.5.8"
+description = "The python interface to Luanti"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "miney-0.2.2.tar.gz", hash = "sha256:1ea131c2c0da0e6b77dcce1297567e33b83dedcd67e117158572a7ab1c643888"},
+    {file = "miney-0.5.8-py3-none-any.whl", hash = "sha256:7f4760da873bffa827e4b20a50dfa8140c2e5810e497aa3b19c124d401a86ea5"},
+    {file = "miney-0.5.8.tar.gz", hash = "sha256:b8fa144c0fc386d8cdd224e866f4918475a4b7f7bfbd4137c90da31b5abe07b5"},
 ]
 
 [[package]]
@@ -1509,4 +1510,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "d1e4fe69a34ae302fd511415d40ecc0ffe2e0fb94dcb9df64a6abb71787ca834"
+content-hash = "a7b88e99bd905cc3f0e1c1d0620c2b94c238bd84aac35fb1cce4f1f36c20a71d"

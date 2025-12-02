@@ -43,20 +43,29 @@ luci erase data/some_stl_file.stl --scale 2
 
 If you like to use `luci` you have to follow this steps.
 
-1. Install **luanti** (see here: https://www.luanti.org/downloads/) and dependencies for `miney-socket`. I use Debian and therefore install it like this:
+1. Install **luanti** (see here: https://www.luanti.org/downloads/) and the `miney` mod. I use Debian and therefore install it like this:
 
     ```bash
     sudo apt update
-    sudo apt install minetest lua-socket lua-cjson -y
+    sudo apt install luanti -y
     ```
 
     You should now be possible to start luanti.
 
     ```bash
-    minetest
+    luanti
     ```
 
-2. (Optional) Install `Minetest Game` as the classic game. This is required in newer versions of `luanti`.
+2. Install `luci` with pipx.
+
+    ```bash
+    sudo apt install pipx -y
+    pipx ensurepath
+    pipx install git+https://github.com/lookslikematrix/luci.git
+    pipx upgrade luci
+    ```
+
+3. (Optional) Install `Minetest Game` as the classic game. This is required in newer versions of `luanti`.
 
     ![Install game](assets/install_game.png)
 
@@ -66,31 +75,19 @@ If you like to use `luci` you have to follow this steps.
 
     You now can click twice *Back* and are ready to play `luanti` without `luci`.
 
-3. Close `luanti` and install the `miney-socket` mod, which is needed for the `miney` python interface.
-
-    ```bash
-    mkdir -p ~/.minetest/mods
-    # via git
-    git clone https://github.com/miney-py/mineysocket ~/.minetest/mods/mineysocket
-    echo "secure.trusted_mods = mineysocket" >> ~/.minetest/minetest.conf
-    ```
-
-4. Install `luci` with pipx.
-
-    ```bash
-    sudo apt install pipx -y
-    pipx ensurepath
-    pipx install git+https://github.com/lookslikematrix/luci.git
-    pipx upgrade luci
-    ```
-
-5. Create game, enable `mineysocket` mod and start game.
+5. Create game, install `miney` mod, enable `miney` mod, enable server and start game.
 
     ![New game](assets/new_game.png)
 
+    ![Create game](assets/create_game.png)
+
     ![Select mods](assets/select_mods.png)
 
-    ![Enable mineysocket](assets/enable_mineysocket.png)
+    ![Find and install miney](assets/find_and_install_miney.png)
+
+    ![Select miney and save](assets/select_miney.png)
+
+    ![Enable host and start](assets/enable_host.png)
 
 5. Build a STL-Object.
 

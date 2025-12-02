@@ -1,3 +1,9 @@
+# 2.0
+
+* Upgrade `miney` to `0.5.8`.
+
+    This connect `luci` directly to the luanti server.
+
 # 1.3
 
 * Add `info` to get players location.

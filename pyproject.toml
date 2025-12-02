@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "luci"
-version = "1.3.0"
+version = "2.0.0"
 description = "📦️ LuCI - Luanti Commandline Interface"
 authors = ["Christian Decker <christian.decker@lookslikematrix.de>"]
 license = "LGPL"
@@ -11,7 +11,7 @@ luci = "luci.__main__:cli"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-miney = "^0.2.2"
+miney = "^0.5.8"
 numpy = "^2.2.0"
 trimesh = {extras = ["easy"], version = "^4.10.0"}
 click = "^8.3.1"

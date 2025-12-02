@@ -54,34 +54,31 @@ def get_object_matrix(filename: str, scale: float):
     click.echo("[ %s ] object pixels." % len(object_indices))
     return object_matrix
 
-def init_luanti_player(mt):
-    mt.time_of_day = 0.3
-    mt.player["singleplayer"].speed = 50
-    mt.player["singleplayer"].fly = True
-
-def build_voxels(mt, position, matrix, block_type):
+def build_voxels(lt, position, matrix, block_type):
     x = round(position["x"])
     y = round(position["y"])
     z = round (position["z"])
-    batch_size = 32000
+    batch_size = 8000
     batches = list()
     batch_index = 0
-    max_batches = matrix.T.shape[0] // batch_size
+    max_batches = matrix.T.shape[0] // batch_size + 1
     click.echo("[ %s ] block type." % block_type )
     for object_pixel in matrix.T:
         if len(batches) > batch_size:
             batch_index += 1
             click.echo("[ %s/%s ] batch index." % (batch_index, max_batches))
-            mt.node.set(batches, name=block_type)
+            lt.nodes.set(batches)
             batches = list()
-        batches.append(
-            {
-                "x": int(object_pixel[0, 0] + x),
-                "y": int(object_pixel[0, 1] + y),
-                "z": int(object_pixel[0, 2] + z)
-            }
+        node = miney.Node(
+            int(object_pixel[0, 0] + x),
+            int(object_pixel[0, 1] + y),
+            int(object_pixel[0, 2] + z),
+            name=block_type
         )
-    mt.node.set(batches, name=block_type)
+        batches.append(node)
+    batch_index += 1
+    click.echo("[ %s/%s ] batch index." % (batch_index, max_batches))
+    lt.nodes.set(batches)
 
 @click.group()
 @click.option(
@@ -140,16 +137,15 @@ Example:
         luci build path_to_stl_file.stl
     """
     object_matrix = get_object_matrix(filename, scale)
-    mt = miney.Minetest()
-    position = mt.player["singleplayer"].position
-    if x is not None:
-        position["x"] = x
-    if y is not None:
-        position["y"] = y
-    if z is not None:
-        position["z"] = z
-    init_luanti_player(mt)
-    build_voxels(mt, position, object_matrix, block_type)
+    with miney.Luanti() as lt:
+        position = lt.players["luci"].position
+        if x is not None:
+            position["x"] = x
+        if y is not None:
+            position["y"] = y
+        if z is not None:
+            position["z"] = z
+        build_voxels(lt, position, object_matrix, block_type)
 
 
 @cli.command()
@@ -184,17 +180,15 @@ Example:
         luci erase path_to_stl_file.stl
     """
     object_matrix = get_object_matrix(filename, scale)
-    mt = miney.Minetest()
-    init_luanti_player(mt)
-    position = mt.player["singleplayer"].position
-    if x is not None:
-        position["x"] = x
-    if y is not None:
-        position["y"] = y
-    if z is not None:
-        position["z"] = z
-    init_luanti_player(mt)
-    build_voxels(mt, position, object_matrix, "air")
+    with miney.Luanti() as lt:
+        position = lt.players["luci"].position
+        if x is not None:
+            position["x"] = x
+        if y is not None:
+            position["y"] = y
+        if z is not None:
+            position["z"] = z
+        build_voxels(lt, position, object_matrix, "air")
 
 
 @cli.command()
@@ -218,10 +212,10 @@ Example:
     Get all wools.
         luci blocks --filter "wool"
     """
-    mt = miney.Minetest()
-    for node_type in mt.node.type:
-        if filter in node_type:
-            click.echo("[ %s ] node type." % node_type)
+    with miney.Luanti() as lt:
+        for node_type in lt.nodes.names:
+            if filter in node_type:
+                click.echo("[ %s ] node type." % node_type)
 
 
 @cli.command()
@@ -233,11 +227,11 @@ Example:
     Get infos.
         luci info
     """
-    mt = miney.Minetest()
-    position = mt.player["singleplayer"].position
-    click.echo(f"x | {position["x"]}")
-    click.echo(f"y | {position["y"]}")
-    click.echo(f"z | {position["z"]}")
+    with miney.Luanti() as lt:
+        position = lt.players["luci"].position
+        click.echo(f"x | {position["x"]}")
+        click.echo(f"y | {position["y"]}")
+        click.echo(f"z | {position["z"]}")
 
 if __name__ == '__main__':
     cli()
