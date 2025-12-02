@@ -110,6 +110,6 @@ poetry shell
 
 ---
 
-❤️ A thousand thanks to the developers of the [`miney-socket`](https://github.com/miney-py/mineysocket) and [`miney`](https://github.com/miney-py/miney) Python interface: https://github.com/miney-py
+❤️ A thousand thanks to the developers of [`miney`](https://github.com/miney-py/miney) Python interface: https://github.com/miney-py
 
 ❤️ Everyone is welcome to make a contribution to this project.
