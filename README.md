@@ -75,7 +75,7 @@ If you like to use `luci` you have to follow this steps.
 
     You now can click twice *Back* and are ready to play `luanti` without `luci`.
 
-5. Create game, install `miney` mod, enable `miney` mod, enable server and start game.
+4. Create game, install `miney` mod, enable `miney` mod, enable server and start game.
 
     ![New game](assets/new_game.png)
 
@@ -88,6 +88,14 @@ If you like to use `luci` you have to follow this steps.
     ![Select miney and save](assets/select_miney.png)
 
     ![Enable host and start](assets/enable_host.png)
+
+5. Grant player `luci` all privileges.
+
+    - *Shift* + */*
+
+    - Type `/grant luci all`
+
+    - Hit enter.
 
 5. Build a STL-Object.
 
