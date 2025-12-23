@@ -1,3 +1,11 @@
+# 2.0.2
+
+* It is now possible to set `x`, `y` and `z`.
+
+    I set now the property instead of the element of the dict.
+
+    `position.x` instead of `position["x"]`.
+
 # 2.0
 
 * Upgrade `miney` to `0.5.8`.

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "luci"
-version = "2.0.1"
+version = "2.0.2"
 description = "📦️ LuCI - Luanti Commandline Interface"
 authors = ["Christian Decker <christian.decker@lookslikematrix.de>"]
 license = "LGPL"

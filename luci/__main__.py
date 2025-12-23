@@ -54,10 +54,10 @@ def get_object_matrix(filename: str, scale: float):
     click.echo("[ %s ] object pixels." % len(object_indices))
     return object_matrix
 
-def build_voxels(lt, position, matrix, block_type):
-    x = round(position["x"])
-    y = round(position["y"])
-    z = round (position["z"])
+def build_voxels(lt, position: miney.Point, matrix, block_type):
+    x = round(position.x)
+    y = round(position.y)
+    z = round (position.z)
     batch_size = 8000
     batches = list()
     batch_index = 0
@@ -140,11 +140,11 @@ Example:
     with miney.Luanti() as lt:
         position = lt.players["luci"].position
         if x is not None:
-            position["x"] = x
+            position.x = x
         if y is not None:
-            position["y"] = y
+            position.y = y
         if z is not None:
-            position["z"] = z
+            position.z = z
         build_voxels(lt, position, object_matrix, block_type)
 
 
@@ -183,11 +183,11 @@ Example:
     with miney.Luanti() as lt:
         position = lt.players["luci"].position
         if x is not None:
-            position["x"] = x
+            position.x = x
         if y is not None:
-            position["y"] = y
+            position.y = y
         if z is not None:
-            position["z"] = z
+            position.z = z
         build_voxels(lt, position, object_matrix, "air")
 
 
@@ -229,9 +229,9 @@ Example:
     """
     with miney.Luanti() as lt:
         position = lt.players["luci"].position
-        click.echo(f"x | {position["x"]}")
-        click.echo(f"y | {position["y"]}")
-        click.echo(f"z | {position["z"]}")
+        click.echo(f"x | {position.x}")
+        click.echo(f"y | {position.y}")
+        click.echo(f"z | {position.z}")
 
 if __name__ == '__main__':
     cli()
