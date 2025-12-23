@@ -1,3 +1,7 @@
+# 2.0.3
+
+* Upgrade dependencies.
+
 # 2.0.2
 
 * It is now possible to set `x`, `y` and `z`.
