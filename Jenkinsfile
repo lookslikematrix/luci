@@ -63,9 +63,11 @@ pipeline {
             when {
                 allOf {
                     branch "main"
-                    changeset "pyproject.toml"
-                    changeset "src/**"
-                    changeset "README.md"
+                    anyOf {
+                        changeset "pyproject.toml"
+                        changeset "src/**"
+                        changeset "README.md"
+                    }
                 }
             }
             environment {
