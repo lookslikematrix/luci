@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        XDG_CACHE_HOME = "${WORKSPACE}"
+        XDG_CACHE_HOME  = "${WORKSPACE}/.cache"
     }
 
     stages {
@@ -17,17 +17,21 @@ pipeline {
                 set -e
                 python -m venv .venv
                 . ./.venv/bin/activate
-                pip install poetry
-                poetry install
+                pip install -e .[test]
+                pip install -e .[build]
                 CHANGED_FILES=$(git diff --name-only ${TARGET_BRANCH:-origin/main}...HEAD)
                 echo "[ $CHANGED_FILES | $TARGET_BRANCH ] 🔎 Changed files related to target branch."
-                poetry run pre-commit run --files $CHANGED_FILES
+                pre-commit run --files $CHANGED_FILES
                 '''
             }
         }
         stage("🕵️ Software-Composition-Analysis") {
             steps {
-                echo "Software-Composition-Analysis.."
+                sh """
+                set -e
+                . ./.venv/bin/activate
+                cyclonedx-py environment .venv --output-file src/luanti_cli/bom.json
+                """
             }
         }
         stage("🔨 Build") {
@@ -35,7 +39,7 @@ pipeline {
                 sh """
                 set -e
                 . ./.venv/bin/activate
-                poetry build
+                python -m build
                 """
             }
         }
@@ -44,8 +48,7 @@ pipeline {
                 sh """
                 set -e
                 . ./.venv/bin/activate
-                poetry install
-                poetry run pytest --junit-xml junit.xml --cov luanti_cli --cov-report xml:cobertura.xml tests/
+                pytest --junit-xml junit.xml --cov src.luanti_cli --cov-report xml:cobertura.xml tests/
                 """
                 junit "junit.xml"
                 discoverReferenceBuild()
@@ -57,13 +60,13 @@ pipeline {
                 branch "main"
             }
             environment {
-                POETRY_PYPI_TOKEN_PYPI = credentials('luci_pypi_token')
+                UV_PUBLISH_TOKEN = credentials('luci_pypi_token')
             }
             steps {
                 sh """
                 set -e
                 . ./.venv/bin/activate
-                poetry publish
+                uv publish
                 """
             }
         }

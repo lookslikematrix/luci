@@ -1,20 +1,16 @@
 from assertpy import assert_that
 from click.testing import CliRunner
 
-from luanti_cli.__main__ import cli
+from src.luanti_cli.__main__ import cli
 
 RUNNER = CliRunner()
+
 
 def test_help():
     # arrange
 
     # act
-    response = RUNNER.invoke(
-       cli=cli,
-       args=[
-          "--help"
-       ]
-    )
+    response = RUNNER.invoke(cli=cli, args=["--help"])
 
     # assert
     assert_that(response.output).is_equal_to(

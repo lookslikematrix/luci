@@ -1,11 +1,13 @@
 # directories
 data
 dist
+luanti_cli.egg-info
 __pycache__
 .pytest_cache
 .venv
 
 # files
+bom.json
 cobertura.xml
 junit.xml
 TODO.md
