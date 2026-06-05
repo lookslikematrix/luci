@@ -13,7 +13,16 @@ pipeline {
     stages {
         stage("🔶 Pre-Commit") {
             steps {
-                echo "Pre-Commit.."
+                sh '''
+                set -e
+                python -m venv .venv
+                . ./.venv/bin/activate
+                pip install poetry
+                poetry install
+                CHANGED_FILES=$(git diff --name-only ${TARGET_BRANCH:-origin/main}...HEAD)
+                echo "[ $CHANGED_FILES | $TARGET_BRANCH ] 🔎 Changed files related to target branch."
+                poetry run pre-commit run --files $CHANGED_FILES
+                '''
             }
         }
         stage("🕵️ Software-Composition-Analysis") {
@@ -25,9 +34,7 @@ pipeline {
             steps {
                 sh """
                 set -e
-                python -m venv .venv
                 . ./.venv/bin/activate
-                pip install poetry
                 poetry build
                 """
             }
@@ -48,7 +55,7 @@ pipeline {
             when {
                 branch "main"
             }
-            environment { 
+            environment {
                 POETRY_PYPI_TOKEN_PYPI = credentials('luci_pypi_token')
             }
             steps {
