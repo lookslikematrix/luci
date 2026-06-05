@@ -56,13 +56,13 @@ If you like to use `luci` you have to follow this steps.
     luanti
     ```
 
-2. Install `luci` with pipx.
+2. Install `luanti_cli` with pipx.
 
     ```bash
     sudo apt install pipx -y
     pipx ensurepath
-    pipx install git+https://github.com/lookslikematrix/luci.git
-    pipx upgrade luci
+    pipx install luanti_cli
+    pipx upgrade luanti_cli
     ```
 
 3. (Optional) Install `Minetest Game` as the classic game. This is required in newer versions of `luanti`.
