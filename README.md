@@ -4,7 +4,7 @@ This Commandline Interface allows you to build CAD-Objects in [**luanti**](https
 
 ![Benchy](assets/benchy.png)
 
-It's depending on [`miney`](https://miney.readthedocs.io/en/latest/) a python interface for luanti. 
+It's depending on [`miney`](https://miney.readthedocs.io/en/latest/) a python interface for luanti.
 
 ## Usage
 
@@ -110,10 +110,10 @@ If you like to use `luci` you have to follow this steps.
 ```bash
 git clone https://github.com/lookslikematrix/luci
 cd luci
-sudo apt install pipx
-pipx install poetry
-poetry install
-poetry shell
+python -m venv --prompt "📦️ luci" .venv
+source .venv/bin/activate
+pip install -e .[test]
+pytest
 ```
 
 ---
