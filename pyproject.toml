@@ -1,14 +1,13 @@
 [tool.poetry]
 name = "luanti_cli"
-packages = [{include = "*", from="luci"}]
-version = "2.0.5"
+version = "2.0.6"
 description = "📦️ LuCI - Luanti Commandline Interface"
 authors = ["Christian Decker <christian.decker@lookslikematrix.de>"]
 license = "LGPL"
 readme = "README.md"
 
 [tool.poetry.scripts]
-luci = "luci.__main__:cli"
+luci = "luanti_cli.__main__:cli"
 
 [tool.poetry.dependencies]
 python = "^3.13"
