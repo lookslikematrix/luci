@@ -17,6 +17,7 @@ trimesh = {extras = ["easy"], version = "^4.12.2"}
 click = "^8.4.1"
 assertpy = "^1.1"
 pytest = "^9.0.3"
+pytest-cov = "^7.1.0"
 
 [build-system]
 requires = ["poetry-core"]

@@ -38,8 +38,10 @@ pipeline {
                 set -e
                 . ./.venv/bin/activate
                 poetry install
-                poetry run pytest
+                poetry run pytest --cov luanti_cli --cov-report xml:cobertura.xml tests/
                 """
+                discoverReferenceBuild()
+                recordCoverage(tools: [[parser: 'COBERTURA']])
             }
         }
         stage("🚀 Deploy") {

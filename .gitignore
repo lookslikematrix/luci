@@ -6,4 +6,6 @@ __pycache__
 .venv
 
 # files
+cobertura.xml
 TODO.md
+.coverage
