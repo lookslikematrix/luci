@@ -34,7 +34,12 @@ pipeline {
         }
         stage("🧪 Test") {
             steps {
-                echo "Testing.."
+                sh """
+                set -e
+                . ./.venv/bin/activate
+                poetry install
+                poetry run pytest
+                """
             }
         }
         stage("🚀 Deploy") {
