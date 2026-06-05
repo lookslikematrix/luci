@@ -11,36 +11,40 @@ pipeline {
     }
 
     stages {
-        stage("🔶 Pre-Commit") {
+        stage("🧰 Prepare") {
             steps {
                 sh '''
                 set -e
                 python -m venv .venv
                 . ./.venv/bin/activate
-                pip install -e .[test]
-                pip install -e .[build]
-                CHANGED_FILES=$(git diff --name-only ${TARGET_BRANCH:-origin/main}...HEAD)
-                echo "[ $CHANGED_FILES | $TARGET_BRANCH ] 🔎 Changed files related to target branch."
-                pre-commit run --files $CHANGED_FILES
+                pip install uv
+                uv sync --extra test --extra build
                 '''
             }
         }
-        stage("🕵️ Software-Composition-Analysis") {
-            steps {
-                sh """
-                set -e
-                . ./.venv/bin/activate
-                cyclonedx-py environment .venv --output-file src/luanti_cli/bom.json
-                """
-            }
-        }
-        stage("🔨 Build") {
-            steps {
-                sh """
-                set -e
-                . ./.venv/bin/activate
-                python -m build
-                """
+        stage("🔍️ Analyze") {
+            failFast true
+            parallel {
+                stage("🔶 Pre-Commit") {
+                    steps {
+                        sh '''
+                        set -e
+                        . ./.venv/bin/activate
+                        CHANGED_FILES=$(git diff --name-only ${TARGET_BRANCH:-origin/main}...HEAD)
+                        echo "[ $CHANGED_FILES | $TARGET_BRANCH ] 🔎 Changed files related to target branch."
+                        pre-commit run --files $CHANGED_FILES
+                        '''
+                    }
+                }
+                stage("🕵️ Software-Composition-Analysis") {
+                    steps {
+                        sh """
+                        set -e
+                        . ./.venv/bin/activate
+                        cyclonedx-py environment .venv --output-file src/luanti_cli/bom.json
+                        """
+                    }
+                }
             }
         }
         stage("🧪 Test") {
@@ -57,7 +61,12 @@ pipeline {
         }
         stage("🚀 Deploy") {
             when {
-                branch "main"
+                allOf {
+                    branch "main"
+                    changeset "pyproject.toml"
+                    changeset "src/**"
+                    changeset "README.md"
+                }
             }
             environment {
                 UV_PUBLISH_TOKEN = credentials('luci_pypi_token')
@@ -66,6 +75,7 @@ pipeline {
                 sh """
                 set -e
                 . ./.venv/bin/activate
+                uv build
                 uv publish
                 """
             }

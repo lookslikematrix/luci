@@ -112,7 +112,8 @@ git clone https://github.com/lookslikematrix/luci
 cd luci
 python -m venv --prompt "📦️ luci" .venv
 source .venv/bin/activate
-pip install -e .[test]
+pip install uv
+uv sync --extra test
 pytest
 ```
 
