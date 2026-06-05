@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "luanti_cli"
-version = "2.0.7"
+version = "2.0.8"
 description = "📦️ LuCI - Luanti Commandline Interface"
 authors = ["Christian Decker <christian.decker@lookslikematrix.de>"]
 license = "LGPL"
@@ -18,6 +18,8 @@ click = "^8.4.1"
 assertpy = "^1.1"
 pytest = "^9.0.3"
 pytest-cov = "^7.1.0"
+pre-commit = "^4.6.0"
+ruff = "^0.15.16"
 
 [build-system]
 requires = ["poetry-core"]
