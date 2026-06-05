@@ -45,8 +45,9 @@ pipeline {
                 set -e
                 . ./.venv/bin/activate
                 poetry install
-                poetry run pytest --cov luanti_cli --cov-report xml:cobertura.xml tests/
+                poetry run pytest --junit-xml junit.xml --cov luanti_cli --cov-report xml:cobertura.xml tests/
                 """
+                junit "junit.xml"
                 discoverReferenceBuild()
                 recordCoverage(tools: [[parser: 'COBERTURA']])
             }
