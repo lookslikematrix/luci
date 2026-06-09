@@ -27,13 +27,10 @@ pipeline {
             parallel {
                 stage("🔶 Pre-Commit") {
                     steps {
-                        sh '''
-                        set -e
-                        . ./.venv/bin/activate
-                        CHANGED_FILES=$(git diff --name-only ${TARGET_BRANCH:-origin/main}...HEAD)
-                        echo "[ $CHANGED_FILES | $TARGET_BRANCH ] 🔎 Changed files related to target branch."
-                        pre-commit run --files $CHANGED_FILES
-                        '''
+                        script {
+                            def preCommit = load "${WORKSPACE}/jenkins/preCommit.groovy"
+                            preCommit.preCommit()
+                        }
                     }
                 }
                 stage("🕵️ Software-Composition-Analysis") {
